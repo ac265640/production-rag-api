@@ -7,9 +7,12 @@ from config import settings
 from ingestion.loader import load_pdf
 from ingestion.chunker import chunk_documents
 from ingestion.embedder import build_index
-from retrieval.retriever import retrieve
+from retrieval.retriever import retrieve as naive_retrieve
+from retrieval.hyde_retriever import HyDERetriever
 from generation.generator import generate
-
+from api.models import IngestRequest, QueryRequest
+from retrieval.multi_query_retriever import MultiQueryRetriever
+from retrieval.reranker import rerank
 router = APIRouter()
 
 
@@ -31,15 +34,27 @@ def ingest(req: IngestRequest):
 
 
 @router.post("/query")
-def query(req: dict):
-    index = faiss.read_index(settings.FAISS_INDEX_PATH)
+def query(req: QueryRequest):
 
-    with open(settings.CHUNKS_STORE_PATH, "rb") as f:
-        chunks = pickle.load(f)
+    if settings.RETRIEVAL_MODE == "hyde":
+        retriever = HyDERetriever()
+        contexts, meta = retriever.retrieve(req.question, req.top_k)
 
-    contexts, meta = retrieve(req["question"], index, chunks)
+    elif settings.RETRIEVAL_MODE == "multi":
+        retriever = MultiQueryRetriever()
+        contexts, meta = retriever.retrieve(req.question, req.top_k)
 
-    answer = generate(req["question"], contexts)
+    elif settings.RETRIEVAL_MODE == "multi_rerank":
+        retriever = MultiQueryRetriever()
+        contexts, meta = retriever.retrieve(req.question, req.top_k * 2)
+
+        contexts = rerank(req.question, contexts)[:req.top_k]
+
+    else:
+    
+        contexts, meta = naive_retrieve(req.question, req.top_k)
+
+        answer = generate(req.question, contexts)
 
     return {
         "answer": answer,
