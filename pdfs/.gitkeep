@@ -1,0 +1,2 @@
+# pdfs directory — place your PDF files here before ingesting
+# This folder is mounted into the Docker container at /app/pdfs

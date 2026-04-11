@@ -1,0 +1,22 @@
+[
+  {
+    "question": "What is the main topic of this paper?",
+    "ground_truth": "The paper presents a hybrid Deep Learning approach for semantic news retrieval combining transformer-based dense embeddings, unsupervised K-Means clustering, and cosine similarity ranking."
+  },
+  {
+    "question": "What embedding model is used in this system?",
+    "ground_truth": "The system uses Sentence-BERT (sentence-transformers) to generate dense semantic embeddings for news articles and queries."
+  },
+  {
+    "question": "What clustering algorithm does the system use?",
+    "ground_truth": "The system uses K-Means clustering to group semantically similar articles into clusters, reducing the retrieval scope for each query."
+  },
+  {
+    "question": "How does the retrieval mechanism work?",
+    "ground_truth": "The retrieval mechanism computes cosine similarity within the matched semantic cluster and returns the top-N articles ranked by similarity score."
+  },
+  {
+    "question": "What are the keywords associated with this paper?",
+    "ground_truth": "The keywords are: Semantic Search, Sentence-BERT, K-Means Clustering, Cosine Similarity, Information Retrieval, Deep Learning."
+  }
+]
