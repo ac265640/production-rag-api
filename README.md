@@ -4,7 +4,7 @@ A production-grade Retrieval-Augmented Generation (RAG) system built with FastAP
 
 ---
 
-## Architecture
+##  Architecture
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
